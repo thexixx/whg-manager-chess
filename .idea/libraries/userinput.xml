@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="userinput">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/userinput.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="file://$USER_HOME$/Documents/WhiteHatGames_HomeWork/ProgTest/javadoc" />
+    </JAVADOC>
+    <SOURCES />
+  </library>
+</component>

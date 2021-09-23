@@ -1,0 +1,8 @@
+[debug] > Exec(scala-shell, None, None)
+[error] Not a valid command: scala-shell (similar: idea-shell, shell, oldshell)
+[error] Not a valid project ID: scala-shell
+[error] Expected ':'
+[error] Not a valid key: scala-shell (similar: scalaHome, scalaSource, scalaInstance)
+[error] scala-shell
+[error]            ^
+[debug] > Exec(idea-shell, None, None)
