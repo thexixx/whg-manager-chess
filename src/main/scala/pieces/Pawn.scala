@@ -2,10 +2,12 @@ package net.whg.manager
 package pieces
 
 class Pawn extends Piece {
-  override def doMove(move: String): MoveResult = {
-    val  = move.substring(2)
+  override def doMove(moveFrom: (Int, Int), moveTo: (Int, Int)): MoveResult = ???
 
+  override def getPos(): (Int, Int) = ???
 
-    MoveResults.ErrorMove
-  }
+  override def checkCheck(): Boolean = ???
+
+  override def getColor(): Char = ???
 }
+

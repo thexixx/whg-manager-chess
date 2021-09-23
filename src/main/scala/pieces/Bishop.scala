@@ -2,14 +2,8 @@ package net.whg.manager
 package pieces
 import board.Board
 
-import com.sun.javafx.scene.transform.TransformUtils
 
-import scala.collection.immutable
-
-
-case class Bishop(board: Board, color: Int, var pos: (Int, Int)) extends Piece {
-
-  val VALID_POSITIONS = immutable.List(16, 40, 23, 47)
+case class Bishop(board: Board, color: Char, var pos: (Int, Int)) extends Piece {
 
   override def doMove(moveFrom: (Int, Int), moveTo: (Int, Int)): MoveResult = {
     //check if move shape is correct
@@ -42,12 +36,6 @@ case class Bishop(board: Board, color: Int, var pos: (Int, Int)) extends Piece {
 
   }
 
-  override def init(): Boolean = {
-    val result = VALID_POSITIONS.contains(pos)
-    if(!result) throw new Exception(s"${this.getClass.getSimpleName} cannot take provided position on the board! Valid positions are $VALID_POSITIONS")
-    result
-  }
-
   override def getPos = pos
 
   override def checkCheck(): Boolean = {
@@ -56,7 +44,9 @@ case class Bishop(board: Board, color: Int, var pos: (Int, Int)) extends Piece {
       var row = fromRow
       while (col <= toCol && row <= toRow) {
         val pieceAtPos = board.getPiece((col, row))
-        if (pieceAtPos.isDefined && pieceAtPos.get.getClass.getSimpleName.equals("King")) {
+        if (pieceAtPos.isDefined
+          && pieceAtPos.get.getClass.toString.equals(King.getClass.toString)
+          && !pieceAtPos.get.getColor().equals(getColor())) {
           return true
         }
         col += deltaCol
@@ -70,4 +60,6 @@ case class Bishop(board: Board, color: Int, var pos: (Int, Int)) extends Piece {
       doCheck(pos._1, 7, pos._2, 0, 1, -1) ||
       doCheck(pos._1, 0, pos._2, 0, -1, -1)
   }
+
+  override def getColor(): Char = color
 }

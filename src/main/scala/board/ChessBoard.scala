@@ -1,7 +1,7 @@
 package net.whg.manager
 package board
 
-import pieces.{MoveResult, MoveResults, Piece}
+import pieces.{Bishop, King, MoveResult, MoveResults, Piece}
 
 import scala.collection.mutable.ListBuffer
 
@@ -42,5 +42,17 @@ class ChessBoard extends Board {
 
   override def addPieceToGraveyard(piece: Piece): Unit = {
     grave += piece
+  }
+
+  override def init(): Unit = {
+    //white
+    addPiece(Bishop(this, 'w', (2, 7)))
+    addPiece(Bishop(this, 'w', (5, 7)))
+    addPiece(King(this, 'w', (3, 7)))
+
+    //black
+    addPiece(Bishop(this, 'b', (2, 0)))
+    addPiece(Bishop(this, 'b', (5, 0)))
+    addPiece(King(this, 'b', (3, 0)))
   }
 }
