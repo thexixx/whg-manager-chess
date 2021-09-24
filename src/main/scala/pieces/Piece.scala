@@ -8,8 +8,8 @@ import net.whg.manager.board.Board
 
 trait Piece {
 
-  var pos: (Int, Int) = (0, 0)
-  var board: Board = null
+  protected var pos: (Int, Int) = (0, 0)
+  protected var board: Board = null
 
   def doMove(moveFrom: (Int, Int), moveTo: (Int, Int)): MoveResult
 

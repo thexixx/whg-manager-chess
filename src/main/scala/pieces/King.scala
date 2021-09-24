@@ -10,26 +10,20 @@ import scala.util.control.Breaks.break
 case class King(color: Char) extends Piece {
 
   def underAttack(): Boolean = {
-    var result = false
-    for (row <- 0 to 7; col <- 0 to 7) {
-      val piece = board.getPiece((col, row))
-      if (piece.isDefined &&
-        !piece.get.getColor().equals(this.color) &&
-        piece.get.checkCheck()) {
-        result = true
-        break()
-      }
-    }
-    result
+    board.getWhoIsOnBoard()
+      .filter(!_.getColor().equals(this.color))
+      .foldLeft(false)((a, b) => a | b.checkCheck())
   }
 
   override def doMove(moveFrom: (Int, Int), moveTo: (Int, Int)): MoveResult = {
     //check if move shape is correct
-    if ((moveFrom._1 - moveTo._1).abs == 1 && (moveFrom._2 - moveTo._2).abs == 1) {
+    val dC = (moveFrom._1 - moveTo._1).abs
+    val dR = (moveFrom._2 - moveTo._2).abs
+    if (dC >= 0 && dC <= 1 && dR >= 0 && dR <= 1) {
 
       //calculate delta
-      val deltaCol: Int = if (moveFrom._1 > moveTo._1) -1 else 1
-      val deltaRow = if (moveFrom._2 > moveTo._2) -1 else 1
+      val deltaCol: Int = if (moveFrom._1 > moveTo._1) -1 else if (moveFrom._1 == moveTo._1) 0 else 1
+      val deltaRow = if (moveFrom._2 > moveTo._2) -1 else if (moveFrom._2 == moveTo._2) 0 else 1
 
       val col = moveFrom._1 + deltaCol
       val row = moveFrom._2 + deltaRow
@@ -38,19 +32,34 @@ case class King(color: Char) extends Piece {
 
       if (obstacleDetected && board.getPiece(moveTo).get.getColor().equals(this.getColor())) {
         return MoveResults.ErrorMove
-      } else if (obstacleDetected && !underAttack()) {
-        board.addPieceToGraveyard(board.getPiece(moveTo).get)
-      } else if (underAttack()) {
-        return MoveResults.Check
       }
 
-      board.clearPlace(moveFrom)
-      board.addPiece(this, moveTo)
-      pos = moveTo
-      //check if King under attack
-      if (checkCheck()) {
-        print("Check detected!")
+      if(obstacleDetected) {
+        //do move to target position and check if King is on under attack from other pieces
+        val backup = board.getPiece(moveTo)
+        board.clearPlace(moveTo)
+        board.clearPlace(moveFrom)
+        board.addPiece(this, moveTo)
+        pos = moveTo
+        if (underAttack()) {
+          board.clearPlace(moveTo)
+          board.clearPlace(moveFrom)
+          board.addPiece(this, moveFrom)
+          board.addPiece(backup.get, moveTo)
+          return MoveResults.Check
+        }
+        board.getGrave() += backup.get
+        board.getWhoIsOnBoard() -= backup.get
+      } else {
+        board.clearPlace(moveFrom)
+        board.addPiece(this, moveTo)
+        pos = moveTo
       }
+
+      if (checkCheck()) {
+        print("King do check to another King!")
+      }
+
       MoveResults.ValidMove
     } else {
       MoveResults.ErrorMove

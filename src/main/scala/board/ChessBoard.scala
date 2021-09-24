@@ -15,6 +15,7 @@ class ChessBoard extends Board {
       board(pos._1)(pos._2) = Some(p)
       p.setPos(pos)
       p.setBoard(this)
+      if(!onBoard.contains(p)) onBoard += p
     } else {
       throw new BoardException(s"Position '$pos' already contains '${pieceOnBoard.get}'!")
     }
@@ -44,10 +45,9 @@ class ChessBoard extends Board {
 
   override def addPieceToGraveyard(piece: Piece): Unit = {
     grave += piece
+    onBoard -= piece
     clearPlace(piece.getPos())
   }
-
-  def getGrave = grave
 
   override def init(): Unit = {
     //white

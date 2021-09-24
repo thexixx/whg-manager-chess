@@ -1,6 +1,57 @@
 package net.whg.manager
 package pieces
 
-class KingTest {
+import board.ChessBoard
+import pieces.Piece.{BLACK, WHITE}
+
+import org.scalatest.flatspec.AnyFlatSpec
+
+class KingTest extends AnyFlatSpec {
+
+  it should "successfully move King 1" in {
+    val board = new ChessBoard
+    val king = King(WHITE)
+    board.addPiece(king, (1,1))
+    assert(board.getPiece((1,1)).isDefined)
+    val move = Array[Int](1,1,2,2)
+    board.movePiece(move)
+    assert(board.getPiece((1,1)).isEmpty)
+    assert(board.getPiece((2,2)).isDefined)
+    assert(board.getPiece((2,2)).get.toString.equals(King.toString()))
+  }
+
+  it should "successfully move King 2" in {
+    val board = new ChessBoard
+    val king = King(WHITE)
+    board.addPiece(king, (2,2))
+    assert(board.getPiece((2,2)).isDefined)
+    val move = Array[Int](2,2,1,2)
+    board.movePiece(move)
+    assert(board.getPiece((2,2)).isEmpty)
+    assert(board.getPiece((1,2)).isDefined)
+    assert(board.getPiece((1,2)).get.toString.equals(King.toString()))
+  }
+
+  it should "fail to move King" in {
+    val board = new ChessBoard
+    val king = King(WHITE)
+    board.addPiece(king, (2,2))
+    assert(board.getPiece((2,2)).isDefined)
+    val move = Array[Int](2,2,1,4)
+    assert(board.movePiece(move).equals(MoveResults.ErrorMove))
+  }
+
+  it should "test if King can kill" in {
+    val board = new ChessBoard
+    val king = King(WHITE)
+    val bishop = Bishop(BLACK)
+    board.addPiece(king, (2,2))
+    board.addPiece(bishop, (1,3))
+    val move = Array[Int](2,2,1,3)
+    board.movePiece(move)
+    assert(board.getGrave.length == 1)
+  }
+
+
 
 }

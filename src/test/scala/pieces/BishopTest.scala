@@ -6,7 +6,7 @@ import pieces.Piece.{BLACK, WHITE}
 
 import org.scalatest.flatspec.AnyFlatSpec
 
-class BishopTest  extends AnyFlatSpec {
+class BishopTest extends AnyFlatSpec {
 
   it should "get/set position" in {
     val bishop = Bishop(WHITE)
@@ -20,12 +20,15 @@ class BishopTest  extends AnyFlatSpec {
     val bishopB = Bishop(BLACK)
     board.addPiece(bishopW, (4,6))
     board.addPiece(bishopB, (2,4))
+    assert(board.getWhoIsOnBoard().length == 2)
     val move = Array[Int](4,6,2,4)
     board.movePiece(move)
     assert(board.getPiece(4,6).isEmpty)
     assert(board.getPiece(2,4).isDefined)
     assert(board.getPiece(2,4).get.equals(bishopW))
     assert(board.getGrave.contains(bishopB))
+    assert(board.getWhoIsOnBoard().length == 1)
+    assert(board.getGrave().length == 1)
   }
 
   it should "show that Bishop cannot go through" in {
@@ -99,6 +102,7 @@ class BishopTest  extends AnyFlatSpec {
     val newBishop1 = board.getPiece(3,5)
     assert(newBishop1.isDefined)
     assert(newBishop1.get.equals(bishop))
+    assert(board.getWhoIsOnBoard().length > 1)
   }
 
   it should "move Bishop to defined position 2 edge of the board" in {
