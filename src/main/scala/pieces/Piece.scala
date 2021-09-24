@@ -24,6 +24,7 @@ trait Piece {
   def getColor(): Char
 
   override def toString: String = this.getClass.getSimpleName
+
 }
 
 object Piece {

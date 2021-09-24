@@ -8,14 +8,14 @@ import net.whg.manager.pieces.Piece.{BLACK, WHITE}
 
 class ChessBoard extends Board {
 
-  override def addPiece(p: Piece, pos: (Int, Int)) = {
-    if(pos._1 < 0 || pos._1 > 7 || pos._2 < 0 || pos._2 > 7) throw new BoardException("Position is outside of the board!")
+  override def addPiece(p: Piece, pos: (Int, Int), f: Boolean = true) = {
+    if(!validatePos(pos)) throw new BoardException("Position is outside of the board!")
     val pieceOnBoard = getPiece(pos)
     if(pieceOnBoard.isEmpty) {
       board(pos._1)(pos._2) = Some(p)
       p.setPos(pos)
       p.setBoard(this)
-      if(!onBoard.contains(p)) onBoard += p
+      if(f) onBoard += p
     } else {
       throw new BoardException(s"Position '$pos' already contains '${pieceOnBoard.get}'!")
     }
@@ -28,16 +28,17 @@ class ChessBoard extends Board {
   override def clearPlace(pos: (Int, Int)) = {
     if(getPiece(pos).isDefined) {
       board(pos._1)(pos._2) = None
-    } else {
-      throw new BoardException(s"Nothing to kill on position '$pos'!")
     }
   }
 
   override def movePiece(move: Array[Int]): MoveResult = {
     val moveFrom = (move(0), move(1))
+    val moveTo = (move(2), move(3))
+    if(!validatePos(moveFrom) || !validatePos(moveTo)) return MoveResults.ErrorMove
     val piece = getPiece(moveFrom)
     if(piece.isDefined) {
-      piece.get.doMove(moveFrom, (move(2), move(3)))
+      if(piece.get.toString.equals(King.toString()) && piece.get.asInstanceOf[King].checkCheckmate()) MoveResults.Checkmate
+      else  piece.get.doMove(moveFrom, moveTo)
     } else {
       MoveResults.ErrorMove
     }
@@ -59,5 +60,34 @@ class ChessBoard extends Board {
     addPiece(Bishop(BLACK), (2, 0))
     addPiece(Bishop(BLACK), (5, 0))
     addPiece(King(BLACK), (3, 0))
+  }
+
+  override def draw(): Unit = {
+    def getRow(row: Int): String = {
+      var rowStr = ""
+      for(col <-0 to 7) {
+        val ch = getPiece((col, row-1)) match {
+          case Some(Bishop(WHITE)) => "B"
+          case Some(King(WHITE)) => "K"
+          case Some(Bishop(BLACK)) => "b"
+          case Some(King(BLACK)) => "k"
+          case _ => " "
+        }
+        rowStr += ch
+      }
+      rowStr
+    }
+
+    println(" ----------")
+    println(s"8|${getRow(8)}|")
+    println(s"7|${getRow(7)}|")
+    println(s"6|${getRow(6)}|")
+    println(s"5|${getRow(5)}|")
+    println(s"4|${getRow(4)}|")
+    println(s"3|${getRow(3)}|")
+    println(s"2|${getRow(2)}|")
+    println(s"1|${getRow(1)}|")
+    println(" ----------")
+    println("  abcdefgh")
   }
 }

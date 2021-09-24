@@ -102,7 +102,7 @@ class BishopTest extends AnyFlatSpec {
     val newBishop1 = board.getPiece(3,5)
     assert(newBishop1.isDefined)
     assert(newBishop1.get.equals(bishop))
-    assert(board.getWhoIsOnBoard().length > 1)
+    assert(board.getWhoIsOnBoard().length == 1)
   }
 
   it should "move Bishop to defined position 2 edge of the board" in {

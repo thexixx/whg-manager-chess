@@ -30,35 +30,36 @@ case class King(color: Char) extends Piece {
 
       val obstacleDetected = board.getPiece((col, row)).isDefined
 
-      if (obstacleDetected && board.getPiece(moveTo).get.getColor().equals(this.getColor())) {
+      val allyDetected = obstacleDetected && board.getPiece(moveTo).get.getColor().equals(this.getColor())
+      if (allyDetected) {
         return MoveResults.ErrorMove
       }
+      val enemyDetected = obstacleDetected && !allyDetected
 
-      if(obstacleDetected) {
-        //do move to target position and check if King is on under attack from other pieces
-        val backup = board.getPiece(moveTo)
+      val backup = board.getPiece(moveTo)
+      board.clearPlace(moveTo)
+      board.clearPlace(moveFrom)
+      board.addPiece(this, moveTo, false)
+      pos = moveTo
+      val mightMoveTo = !underAttack()
+
+      // if place to move occupied by ally - cannot move
+      // if place to move is under attack - cannot move
+      if (allyDetected || !mightMoveTo) {
         board.clearPlace(moveTo)
         board.clearPlace(moveFrom)
-        board.addPiece(this, moveTo)
-        pos = moveTo
-        if (underAttack()) {
-          board.clearPlace(moveTo)
-          board.clearPlace(moveFrom)
-          board.addPiece(this, moveFrom)
-          board.addPiece(backup.get, moveTo)
-          return MoveResults.Check
-        }
-        board.getGrave() += backup.get
-        board.getWhoIsOnBoard() -= backup.get
-      } else {
-        board.clearPlace(moveFrom)
-        board.addPiece(this, moveTo)
-        pos = moveTo
+        board.addPiece(this, moveFrom, false)
+        if (backup.isDefined) board.addPiece(backup.get, moveTo, false)
+        pos = moveFrom
+        return if (allyDetected) MoveResults.ErrorMove else MoveResults.Check
       }
 
-      if (checkCheck()) {
-        print("King do check to another King!")
+      // if place to move occupied by enemy and not under attack - kill
+      if (enemyDetected && mightMoveTo) {
+        board.addPieceToGraveyard(backup.get)
       }
+
+      // if place to move empty - can move
 
       MoveResults.ValidMove
     } else {
@@ -83,6 +84,28 @@ case class King(color: Char) extends Piece {
       doCheck(pos._1 - 1, 0, pos._2 + 1, 7, -1, 1) ||
       doCheck(pos._1 + 1, 7, pos._2 - 1, 0, 1, -1) ||
       doCheck(pos._1 - 1, 0, pos._2 - 1, 0, -1, -1)
+  }
+
+  def checkCheckmate(): Boolean = {
+
+    def m(moveFrom: (Int, Int), moveTo: (Int, Int)): Boolean = {
+      val b1 = board.validatePos(moveTo)
+      if(b1) b1 && !doMove(moveFrom, moveTo).equals(MoveResults.ValidMove)
+      else true
+    }
+
+    var result = true
+
+    result &= m(pos, (pos._1 + 1, pos._2))
+    result &= m(pos, (pos._1, pos._2 + 1))
+    result &= m(pos, (pos._1 - 1, pos._2))
+    result &= m(pos, (pos._1, pos._2 - 1))
+    result &= m(pos, (pos._1 + 1, pos._2 + 1))
+    result &= m(pos, (pos._1 - 1, pos._2 - 1))
+    result &= m(pos, (pos._1 + 1, pos._2 - 1))
+    result &= m(pos, (pos._1 - 1, pos._2 + 1))
+
+    result
   }
 
   override def getColor(): Char = color

@@ -1,7 +1,7 @@
 package net.whg.manager
 package board
 
-import pieces.Piece.WHITE
+import pieces.Piece.{BLACK, WHITE}
 import pieces.{Bishop, King}
 
 import org.scalatest.flatspec.AnyFlatSpec
@@ -63,4 +63,18 @@ class ChessBoardTest extends AnyFlatSpec {
     assert(board.getPiece((3,7)).get.toString.equals(King.toString()))
   }
 
+  it should "draw board" in {
+    val board = new ChessBoard
+    val kingB = King(BLACK)
+    val bishopB1 = Bishop(BLACK)
+    val bishopB2 = Bishop(BLACK)
+    val bishopW1 = Bishop(WHITE)
+    val bishopW2 = Bishop(WHITE)
+    board.addPiece(kingB, (7,1))
+    board.addPiece(bishopB1, (6,0))
+    board.addPiece(bishopB2, (7,2))
+    board.addPiece(bishopW1, (5,3))
+    board.addPiece(bishopW2, (3,4))
+    board.draw()
+  }
 }

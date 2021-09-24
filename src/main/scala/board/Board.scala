@@ -14,7 +14,7 @@ trait Board {
 
   def init(): Unit
 
-  def addPiece(p: Piece, pos: (Int, Int)): Unit
+  def addPiece(p: Piece, pos: (Int, Int), f: Boolean = true): Unit
 
   def getPiece(pos: (Int, Int)): Option[Piece]
 
@@ -27,4 +27,10 @@ trait Board {
   def getGrave(): ListBuffer[Piece] = this.grave
 
   def getWhoIsOnBoard(): ListBuffer[Piece] = this.onBoard
+
+  final def validatePos(pos: (Int, Int)): Boolean = {
+    pos._1 < 8 && pos._1 >= 0 && pos._2 < 8 && pos._2 >= 0
+  }
+
+  def draw(): Unit
 }

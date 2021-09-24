@@ -37,7 +37,7 @@ case class Bishop(color: Char) extends Piece {
       }
 
       board.clearPlace(moveFrom)
-      board.addPiece(this, moveTo)
+      board.addPiece(this, moveTo, false)
       pos = moveTo
       //check if King under attack
       if (checkCheck()) {
@@ -74,4 +74,6 @@ case class Bishop(color: Char) extends Piece {
   }
 
   override def getColor(): Char = color
+
+  override def hashCode(): Int = super.hashCode() + Math.random().toInt
 }
