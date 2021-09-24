@@ -4,11 +4,12 @@ package pieces
 import board.Board
 
 import net.whg.manager.pieces.MoveResults.MoveResult
+import net.whg.manager.pieces.Piece.WHITE
 
 
 case class Bishop(color: Char) extends Piece {
 
-  override def doMove(moveFrom: (Int, Int), moveTo: (Int, Int)): MoveResult = {
+  override def doMove(moveFrom: (Int, Int), moveTo: (Int, Int), v: Boolean = false): MoveResult = {
     //check if move shape is correct
     if ((moveFrom._1 - moveTo._1).abs == (moveFrom._2 - moveTo._2).abs) {
       //check if no other pieces between moveFrom and moveTo
@@ -76,4 +77,8 @@ case class Bishop(color: Char) extends Piece {
   override def getColor(): Char = color
 
   override def hashCode(): Int = super.hashCode() + Math.random().toInt
+
+  override def getChar(): Char = {
+    if (color.equals(WHITE)) 'B' else 'b'
+  }
 }

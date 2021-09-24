@@ -11,7 +11,7 @@ trait Piece {
   protected var pos: (Int, Int) = (0, 0)
   protected var board: Board = null
 
-  def doMove(moveFrom: (Int, Int), moveTo: (Int, Int)): MoveResult
+  def doMove(moveFrom: (Int, Int), moveTo: (Int, Int), v: Boolean = false): MoveResult
 
   final def getPos(): (Int, Int) = pos
 
@@ -24,6 +24,8 @@ trait Piece {
   def getColor(): Char
 
   override def toString: String = this.getClass.getSimpleName
+
+  def getChar(): Char
 
 }
 

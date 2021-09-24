@@ -66,28 +66,23 @@ class ChessBoard extends Board {
     def getRow(row: Int): String = {
       var rowStr = ""
       for(col <-0 to 7) {
-        val ch = getPiece((col, row-1)) match {
-          case Some(Bishop(WHITE)) => "B"
-          case Some(King(WHITE)) => "K"
-          case Some(Bishop(BLACK)) => "b"
-          case Some(King(BLACK)) => "k"
-          case _ => " "
-        }
-        rowStr += ch
+        val ch = getPiece((col, row-1))
+        if(ch.isDefined) rowStr += ch.get.getChar() else rowStr += " "
       }
       rowStr
     }
 
     println(" ----------")
-    println(s"8|${getRow(8)}|")
-    println(s"7|${getRow(7)}|")
-    println(s"6|${getRow(6)}|")
-    println(s"5|${getRow(5)}|")
-    println(s"4|${getRow(4)}|")
-    println(s"3|${getRow(3)}|")
-    println(s"2|${getRow(2)}|")
-    println(s"1|${getRow(1)}|")
+    println(s"8|${getRow(1)}|")
+    println(s"7|${getRow(2)}|")
+    println(s"6|${getRow(3)}|")
+    println(s"5|${getRow(4)}|")
+    println(s"4|${getRow(5)}|")
+    println(s"3|${getRow(6)}|")
+    println(s"2|${getRow(7)}|")
+    println(s"1|${getRow(8)}|")
     println(" ----------")
     println("  abcdefgh")
+    println()
   }
 }
