@@ -7,9 +7,7 @@ import net.whg.manager.pieces.MoveResults.MoveResult
 
 import scala.util.control.Breaks.break
 
-case class King(board: Board, color: Char) extends Piece {
-
-  private var pos: (Int, Int) = (0, 0)
+case class King(color: Char) extends Piece {
 
   def underAttack(): Boolean = {
     var result = false
@@ -59,8 +57,6 @@ case class King(board: Board, color: Char) extends Piece {
     }
   }
 
-  override def getPos(): (Int, Int) = pos
-
   override def checkCheck(): Boolean = {
     def doCheck(fromCol: Int, toCol: Int, fromRow: Int, toRow: Int, deltaCol: Int, deltaRow: Int): Boolean = {
       val col = fromCol
@@ -81,8 +77,4 @@ case class King(board: Board, color: Char) extends Piece {
   }
 
   override def getColor(): Char = color
-
-  override def setPos(pos: (Int, Int)): Unit = {
-    this.pos = pos
-  }
 }

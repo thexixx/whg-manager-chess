@@ -1,28 +1,44 @@
 package net.whg.manager
 package board
 
-import net.whg.manager.pieces.{Bishop, King}
+import pieces.Piece.WHITE
+import pieces.{Bishop, King}
+
 import org.scalatest.flatspec.AnyFlatSpec
 
 class ChessBoardTest extends AnyFlatSpec {
 
   it should "store piece position" in {
     val board = new ChessBoard
-    val bishop = Bishop(board, 'w')
+    val bishop = Bishop(WHITE)
     board.addPiece(bishop, (1,3))
     assert(bishop.getPos() == (1,3))
   }
 
   it should "add piece to the board" in {
     val board = new ChessBoard
-    val bishop = Bishop(board, 'w')
+    val bishop = Bishop(WHITE)
     board.addPiece(bishop, (1,3))
     assert(board.getPiece(1,3).isDefined)
   }
 
+  it should "fail to add piece to outside of the board" in {
+    val board = new ChessBoard
+    val bishop = Bishop(WHITE)
+    assertThrows[BoardException](board.addPiece(bishop, (-1,3)))
+  }
+
+  it should "fail to add piece to occupied place" in {
+    val board = new ChessBoard
+    val bishop1 = Bishop(WHITE)
+    val bishop2 = Bishop(WHITE)
+    board.addPiece(bishop1, (1,1))
+    assertThrows[BoardException](board.addPiece(bishop2, (1,1)))
+  }
+
   it should "clear place on the board" in {
     val board = new ChessBoard
-    val bishop = Bishop(board, 'w')
+    val bishop = Bishop(WHITE)
     board.addPiece(bishop, (1,3))
     board.clearPlace((1,3))
     assert(board.getPiece(1,3).isEmpty)
@@ -30,7 +46,7 @@ class ChessBoardTest extends AnyFlatSpec {
 
   it should "remove piece to grave" in {
     val board = new ChessBoard
-    val bishop = Bishop(board, 'w')
+    val bishop = Bishop(WHITE)
     board.addPiece(bishop, (1,3))
     board.addPieceToGraveyard(bishop)
     assert(board.getPiece(1,3).isEmpty)

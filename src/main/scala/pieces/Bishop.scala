@@ -6,9 +6,7 @@ import board.Board
 import net.whg.manager.pieces.MoveResults.MoveResult
 
 
-case class Bishop(board: Board, color: Char) extends Piece {
-
-  private var pos: (Int, Int) = (0, 0)
+case class Bishop(color: Char) extends Piece {
 
   override def doMove(moveFrom: (Int, Int), moveTo: (Int, Int)): MoveResult = {
     //check if move shape is correct
@@ -26,13 +24,16 @@ case class Bishop(board: Board, color: Char) extends Piece {
       }
       obstacleDetected |= board.getPiece((col, row)).isDefined
 
-      if(obstacleDetected && moveTo != (col, row)) {
+      if (obstacleDetected && moveTo != (col, row)) {
         return MoveResults.ErrorMove
       }
 
       if (board.getPiece(moveTo).isDefined &&
-          !board.getPiece(moveTo).get.getColor().equals(this.getColor())) {
+        !board.getPiece(moveTo).get.getColor().equals(this.getColor())) {
         board.addPieceToGraveyard(board.getPiece(moveTo).get)
+      } else if (board.getPiece(moveTo).isDefined &&
+        board.getPiece(moveTo).get.getColor().equals(this.getColor())) {
+        return MoveResults.ErrorMove
       }
 
       board.clearPlace(moveFrom)
@@ -48,8 +49,6 @@ case class Bishop(board: Board, color: Char) extends Piece {
     }
 
   }
-
-  override def getPos() = pos
 
   override def checkCheck(): Boolean = {
     def doCheck(fromCol: Int, toCol: Int, fromRow: Int, toRow: Int, deltaCol: Int, deltaRow: Int): Boolean = {
@@ -75,8 +74,4 @@ case class Bishop(board: Board, color: Char) extends Piece {
   }
 
   override def getColor(): Char = color
-
-  override def setPos(pos: (Int, Int)): Unit = {
-    this.pos = pos
-  }
 }
