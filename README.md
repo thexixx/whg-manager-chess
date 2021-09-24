@@ -11,3 +11,5 @@ Start class is net.whg.manager.Start
 1st program argument should be path to files with moves
 
 Initialization of the board is in ChessBoard.init() method
+
+Simple example is in 'moves' folder
