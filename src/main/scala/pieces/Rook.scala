@@ -9,4 +9,6 @@ class Rook extends Piece {
   override def checkCheck(): Boolean = ???
 
   override def getColor(): Char = ???
+
+  override def setPos(pos: (Int, Int)): Unit = ???
 }

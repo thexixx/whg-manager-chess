@@ -5,6 +5,7 @@ package pieces
 trait Piece {
   def doMove(moveFrom: (Int, Int), moveTo: (Int, Int)): MoveResult
   def getPos(): (Int, Int)
+  def setPos(pos: (Int, Int))
   def checkCheck(): Boolean
   def getColor(): Char
 

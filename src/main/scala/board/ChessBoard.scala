@@ -6,13 +6,12 @@ import pieces.{Bishop, King, MoveResult, MoveResults, Piece}
 import scala.collection.mutable.ListBuffer
 
 class ChessBoard extends Board {
-  private var grave = ListBuffer[Piece]()
 
-  override def addPiece(p: Piece) = {
-    val pos = p.getPos()
+  override def addPiece(p: Piece, pos: (Int, Int)) = {
     val pieceOnBoard = getPiece(pos)
     if(pieceOnBoard.isEmpty) {
       board(pos._1)(pos._2) = Some(p)
+      p.setPos(pos)
     } else {
       throw new Exception(s"Position '$pos' already contains '${pieceOnBoard.get}'!")
     }
@@ -22,7 +21,7 @@ class ChessBoard extends Board {
     board(pos._1)(pos._2)
   }
 
-  override def killPiece(pos: (Int, Int)) = {
+  override def clearPlace(pos: (Int, Int)) = {
     if(getPiece(pos).isDefined) {
       board(pos._1)(pos._2) = None
     } else {
@@ -42,17 +41,20 @@ class ChessBoard extends Board {
 
   override def addPieceToGraveyard(piece: Piece): Unit = {
     grave += piece
+    clearPlace(piece.getPos())
   }
+
+  def getGrave = grave
 
   override def init(): Unit = {
     //white
-    addPiece(Bishop(this, 'w', (2, 7)))
-    addPiece(Bishop(this, 'w', (5, 7)))
-    addPiece(King(this, 'w', (3, 7)))
+    addPiece(Bishop(this, 'w'), (2, 7))
+    addPiece(Bishop(this, 'w'), (5, 7))
+    addPiece(King(this, 'w'), (3, 7))
 
     //black
-    addPiece(Bishop(this, 'b', (2, 0)))
-    addPiece(Bishop(this, 'b', (5, 0)))
-    addPiece(King(this, 'b', (3, 0)))
+    addPiece(Bishop(this, 'b'), (2, 0))
+    addPiece(Bishop(this, 'b'), (5, 0))
+    addPiece(King(this, 'b'), (3, 0))
   }
 }
