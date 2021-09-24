@@ -1,9 +1,8 @@
 package net.whg.manager
 package board
 
-import pieces.{Bishop, King, MoveResult, MoveResults, Piece}
-
-import scala.collection.mutable.ListBuffer
+import pieces.MoveResults.MoveResult
+import pieces.{Bishop, King, MoveResults, Piece}
 
 class ChessBoard extends Board {
 

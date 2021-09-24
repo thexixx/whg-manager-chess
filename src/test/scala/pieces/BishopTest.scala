@@ -9,7 +9,7 @@ class BishopTest  extends AnyFlatSpec {
   it should "get/set position" in {
     val bishop = Bishop(null, 'w')
     bishop.setPos((1,2))
-    assert(bishop.getPos == (1,2))
+    assert(bishop.getPos() == (1,2))
   }
 
   it should "test if Bishop can kill" in {

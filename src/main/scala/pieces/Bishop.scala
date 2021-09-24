@@ -3,6 +3,8 @@ package pieces
 
 import board.Board
 
+import net.whg.manager.pieces.MoveResults.MoveResult
+
 
 case class Bishop(board: Board, color: Char) extends Piece {
 
@@ -47,7 +49,7 @@ case class Bishop(board: Board, color: Char) extends Piece {
 
   }
 
-  override def getPos = pos
+  override def getPos() = pos
 
   override def checkCheck(): Boolean = {
     def doCheck(fromCol: Int, toCol: Int, fromRow: Int, toRow: Int, deltaCol: Int, deltaRow: Int): Boolean = {

@@ -10,7 +10,7 @@ class ChessBoardTest extends AnyFlatSpec {
     val board = new ChessBoard
     val bishop = Bishop(board, 'w')
     board.addPiece(bishop, (1,3))
-    assert(bishop.getPos == (1,3))
+    assert(bishop.getPos() == (1,3))
   }
 
   it should "add piece to the board" in {
